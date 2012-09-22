@@ -1,17 +1,19 @@
 
 <ul id="stream">
-    <% for(var i=0; i<photos.items.length; i++) {
-        var photo = photos.items[i];
+    <% for(var i=0; i<userPhotos.photos.items.length; i++) {
+        var photo = userPhotos.photos.items[i];
     %>
     <li style="position:relative;">
-        <img src="<%= photo.thumbUrl %>" class="sm-image"/>
-        <img src="<%= photo.photoUrl %>" data-restype="ee-photo" data-id="<%=photo.id%>"
+        <img src="<%=photo.thumbUrl %>" class="sm-image"/>
+        <img src="<%=photo.photoUrl %>" data-restype="ee-photo" data-id="<%=photo.id%>"
             class="bigimage">
 
         <% if (photo.tag) { %>
-            <p> <%=photo.tag.tagname%> </p>
+        <p> <%=photo.tag.tagname%> </p>
         <% } %>
+
     </li>
+
     <% } %>
 </ul>
 

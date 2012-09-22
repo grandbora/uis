@@ -18,7 +18,7 @@ var oa = new oauth(
 var StreamHandler = function() {
     this.streamManager = new sm.StreamManager(oa);
     this.tagManager = new tm.TagManager();
-}
+};
 
 StreamHandler.prototype.index = function(req, res){
   res.render('index', { title: 'Express' });
@@ -26,7 +26,7 @@ StreamHandler.prototype.index = function(req, res){
 
 StreamHandler.prototype.main = function(req, res) {
     res.render('stream/main');
-}
+};
 
 StreamHandler.prototype.stream = function(req, res) {
   var access_token = req.cookies['eyem_cookie'];
@@ -34,13 +34,22 @@ StreamHandler.prototype.stream = function(req, res) {
 
   this.streamManager.getMe(access_token, function(result) {
     var user = result.user;
-    self.streamManager.getStream(user.id, access_token, function(data) {
-        var eyemIds = und.pluck(data.photos.items, "id");
-        self.tagManager.getTags(eyemIds, data.photos.items, function() {
-            console.dir(data.photos.items); //tags attached
-            res.render('stream/stream',{
-                layout:true,
-                locals:data
+    self.streamManager.getStream(user.id, access_token, function(userPhotos) {
+        var eyemIds = und.pluck(userPhotos.photos.items, "id");
+        self.tagManager.getTags(eyemIds, userPhotos.photos.items, function() {
+
+            console.dir(userPhotos.photos.items); //tags attached
+
+            self.streamManager.getFriendStream(user.id, access_token, function(friendPhotos) {
+                res.render('stream/stream',{
+                    locals: {
+                        user: user,
+                        userPhotos:userPhotos,
+                        friendPhotos:friendPhotos
+                    },
+                    layout:true
+                });
+
             });
         });
     });
