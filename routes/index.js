@@ -20,10 +20,9 @@ StreamHandler.prototype.index = function(req, res){
   res.render('index', { title: 'Express' });
 };
 
-
 StreamHandler.prototype.stream = function(req, res) {
-
-    this.streamManager.getStream(146292, function(data) {
+    var userId = req.params.userId;
+    this.streamManager.getStream(userId, function(data) {
         res.render('stream',{
             layout:true,
             locals:data
@@ -31,6 +30,11 @@ StreamHandler.prototype.stream = function(req, res) {
     });
 };
 
+StreamHandler.prototype.main = function(req, res) {
+    res.render('stream/main', {
+
+    });
+}
 
 exports.login = function(req, res){
     var authorizeUrl = oa.getAuthorizeUrl({

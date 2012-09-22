@@ -7,6 +7,7 @@ var StreamManager = function()  {
     this.col = db.collection("uis");
 }
 
+
 StreamManager.prototype.getStream = function(userId, cb) {
 
     var options = {
@@ -17,7 +18,6 @@ StreamManager.prototype.getStream = function(userId, cb) {
     };
 
     var req = https.request(options, function(res) {
-
         var data = "";
         res.on('data', function(d) {
             data += d;

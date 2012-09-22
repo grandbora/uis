@@ -9,7 +9,8 @@
     "express": "latest",
     "ejs": "*",
     "mongoskin": "*",
-    "oauth": "*"
+    "oauth": "*",
+    "express-ejs-layouts": "*"
   },
    "engines": {
     "node" : "0.8.x",

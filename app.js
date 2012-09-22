@@ -6,7 +6,9 @@
 var express = require('express')
   , routes = require('./routes')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+    ,expressLayouts = require('express-ejs-layouts')
+    ;
 
 var app = express();
 
@@ -14,6 +16,8 @@ app.configure(function(){
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
+    app.set('layout', 'layout'); // defaults to 'layout'
+    app.use(expressLayouts);
 
   app.use(express.favicon());
   app.use(express.logger('dev'));
@@ -33,7 +37,9 @@ app.configure('development', function(){
 var streamHandler = new routes.StreamHandler();
 
 app.get('/', streamHandler.index.bind(streamHandler));
-app.get('/stream', streamHandler.stream.bind(streamHandler));
+app.get('/stream', streamHandler.main.bind(streamHandler));
+
+app.get('/stream/:userId', streamHandler.stream.bind(streamHandler));
 
 app.get('/login', routes.login);
 app.get('/login_callback', routes.loginCallback);
