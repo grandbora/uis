@@ -15,7 +15,7 @@ var oa = new oauth(
 
 var StreamHandler = function() {
     this.streamManager = new sm.StreamManager(oa);
-}
+};
 
 StreamHandler.prototype.index = function(req, res){
   res.render('index', { title: 'Express' });
@@ -23,20 +23,37 @@ StreamHandler.prototype.index = function(req, res){
 
 StreamHandler.prototype.main = function(req, res) {
     res.render('stream/main');
-}
+};
 
 StreamHandler.prototype.stream = function(req, res) {
 
   var self = this;
-  this.streamManager.getMe(req.cookies['eyem_cookie'], function(result) {
-    var user = result.user;
-    self.streamManager.getStream(user.id, req.cookies['eyem_cookie'], function(result) {
-        res.render('stream/stream',{
-            layout:true,
-            locals:result
+  self.streamManager.getMe(req.cookies['eyem_cookie'], function(result) {
+
+    self.streamManager.getStream(result.user.id, req.cookies['eyem_cookie'], function(userPhotos) {
+
+      self.streamManager.getFriendStream(result.user.id, req.cookies['eyem_cookie'], function(friendPhotos) {
+        
+res.send({
+              user:result.user,
+              userPhotos:userPhotos,
+              friendPhotos:friendPhotos
+            });
+return;
+        // res.render('stream/stream',{
+        //     layout:true,
+        //     locals:{
+        //       user:user,
+        //       userPhotos:userPhotos,
+        //       friendPhotos:friendPhotos
+        //     }
+        //   });
         });
+
+      });
+
     });
-  });
+
 };
 
 

@@ -5,21 +5,29 @@ var StreamManager = function(oa)  {
     var db = mongodb.db(process.env.MONGOLAB_URI);
     this.col = db.collection("uis");
     this.oa = oa;
-}
+};
 
 StreamManager.prototype.getMe = function(accessToken, cb) {
-    this.oa.get(process.env.EYEEM_BASESITE + '/api/v2/users/me', accessToken, function(error, result, response){
-        var result = JSON.parse(result);
-        cb(result);
-    });
-}
+    this.oa.get(process.env.EYEEM_BASESITE + '/api/v2/users/me', accessToken, parseApiResponse(cb));
+};
 
 StreamManager.prototype.getStream = function(userId, accessToken, cb) {
+    this.oa.get(process.env.EYEEM_BASESITE + '/api/v2/users/' + userId + '/photos', accessToken, parseApiResponse(cb));
+};
 
-    this.oa.get(process.env.EYEEM_BASESITE + '/api/v2/users/' + userId + '/photos', accessToken, function(error, result, response){
+StreamManager.prototype.getFriendStream = function(userId, accessToken, cb) {
+    this.oa.get(process.env.EYEEM_BASESITE + '/api/v2/users/' + userId + '/friendsPhotos', accessToken, parseApiResponse(cb));
+};
+
+
+var parseApiResponse = function(cb){
+    return function(error, result, response){
+        if (error) {
+            console.log(error);
+        }
         var result = JSON.parse(result);
         cb(result);
-    });
-}
+    };
+};
 
 exports.StreamManager = StreamManager;
