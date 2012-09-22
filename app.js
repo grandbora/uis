@@ -5,7 +5,6 @@
 
 var express = require('express')
   , routes = require('./routes')
-  , user = require('./routes/user')
   , http = require('http')
   , path = require('path');
 
@@ -15,6 +14,7 @@ app.configure(function(){
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
+
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
@@ -30,11 +30,13 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.get('/', routes.index);
+var streamHandler = new routes.StreamHandler();
+
+app.get('/', streamHandler.index.bind(streamHandler));
+app.get('/stream', streamHandler.stream.bind(streamHandler));
+
 app.get('/login', routes.login);
 app.get('/login_callback', routes.loginCallback);
-app.get('/tag', routes.tagsIndex);
-app.get('/users', user.list);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
