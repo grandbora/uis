@@ -10,7 +10,8 @@
     "ejs": "*",
     "mongoskin": "*",
     "oauth": "*",
-    "express-ejs-layouts": "*"
+    "express-ejs-layouts": "*",
+    "underscore": "*"
   },
    "engines": {
     "node" : "0.8.x",

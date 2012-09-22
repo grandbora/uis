@@ -35,6 +35,7 @@ app.configure('development', function(){
 });
 
 var streamHandler = new routes.StreamHandler();
+var tagHandler = new routes.TagHandler();
 
 app.get('/', streamHandler.index.bind(streamHandler));
 app.get('/stream', streamHandler.main.bind(streamHandler));
@@ -44,6 +45,7 @@ app.get('/stream/:userId', streamHandler.stream.bind(streamHandler));
 app.get('/login', routes.login);
 app.get('/login_callback', routes.loginCallback);
 
+app.post('/tag', tagHandler.addTag.bind(tagHandler));
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
