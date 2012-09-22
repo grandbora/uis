@@ -1,10 +1,7 @@
-
-/*
- * GET home page.
- */
-
-var sm = require('../logic/StreamManager.js');
-var oauth = require('oauth').OAuth2;
+var sm = require('../logic/StreamManager.js')
+    , tm = require('../logic/TagManager.js')
+    , und = require("underscore")
+    , oauth = require('oauth').OAuth2;
 
 var oa = new oauth(
 	process.env.EYEEM_CLIENTID,
@@ -15,10 +12,15 @@ var oa = new oauth(
 
 var StreamHandler = function() {
     this.streamManager = new sm.StreamManager(oa);
+    this.tagManager = new tm.TagManager();
 };
 
 StreamHandler.prototype.index = function(req, res){
-  res.render('index', { title: 'Express' });
+  res.render('index', {
+      title: 'Express',
+      friendstream:['a','b'],
+      userstream:['uc','ud']
+  });
 };
 
 StreamHandler.prototype.main = function(req, res) {
@@ -26,49 +28,38 @@ StreamHandler.prototype.main = function(req, res) {
 };
 
 StreamHandler.prototype.stream = function(req, res) {
-
+  var accessToken = req.cookies['eyem_cookie'];
   var self = this;
-  self.streamManager.getMe(req.cookies['eyem_cookie'], function(result) {
-    self.streamManager.getStream(result.user.id, req.cookies['eyem_cookie'], function(userPhotos) {
-      self.streamManager.getFriendStream(result.user.id, req.cookies['eyem_cookie'], function(friendPhotos) {
 
+  self.streamManager.getMe(accessToken, function(result) {
+    self.streamManager.getStream(result.user.id, accessToken, function(userPhotos) {
+      self.streamManager.getFriendStream(result.user.id, accessToken, function(friendPhotos) {
 
-        console.log(userPhotos.photos.items);
+        var eyemIds = und.pluck(userPhotos.photos.items, "id");
+        self.tagManager.getTags(eyemIds, userPhotos.photos.items, function() {
 
-        console.log({
-          userPhotos:userPhotos,
-          user:result.user,
-          friendPhotos:friendPhotos
+          res.render('stream/main',{
+              user: result.user,
+              userPhotos:userPhotos,
+              friendPhotos:friendPhotos
+              layout:true
+          });
+
         });
-
-        // app.render('stream/stream', {
-        //   layout:true,
-        //   locals:{
-        //     user:result.user,
-        //     userPhotos:userPhotos,
-        //     friendPhotos:friendPhotos
-        //   }
-        // }, function(err, html){
-        //     res.send(htm);
-        // });
-        // return;
-
-        res.render('stream/main',{
-          layout:true,
-          locals:{
-            user:result.user,
-            userPhotos:userPhotos,
-            friendPhotos:friendPhotos
-          }
-        });
-
-
-
       });
     });
   });
 };
 
+var TagHandler = function() {
+    this.tagManager = new tm.TagManager();
+};
+
+TagHandler.prototype.addTag = function(req, res) {
+    var tag = req.body;
+    this.tagManager.addTag(tag);
+    res.send(200,{result:'ok'});
+};
 
 exports.login = function(req, res){
   var authorizeUrl = oa.getAuthorizeUrl({
@@ -91,3 +82,4 @@ exports.loginCallback = function(req, res){
 };
 
 exports.StreamHandler = StreamHandler;
+exports.TagHandler = TagHandler;

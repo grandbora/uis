@@ -1,14 +1,9 @@
-
-/**
- * Module dependencies.
- */
-
 var express = require('express')
   , routes = require('./routes')
   , http = require('http')
   , path = require('path')
-    ,expressLayouts = require('express-ejs-layouts')
-    ;
+  , engines = require('consolidate');
+
 
 var app = express();
 
@@ -16,8 +11,9 @@ app.configure(function(){
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
+  app.engine('ejs', engines.ejs);
     app.set('layout', 'layout'); // defaults to 'layout'
-    app.use(expressLayouts);
+
 
   app.use(express.favicon());
   app.use(express.logger('dev'));
@@ -35,6 +31,7 @@ app.configure('development', function(){
 });
 
 var streamHandler = new routes.StreamHandler();
+var tagHandler = new routes.TagHandler();
 
 app.get('/', streamHandler.index.bind(streamHandler));
 app.get('/stream', streamHandler.stream.bind(streamHandler));
@@ -42,4 +39,9 @@ app.get('/stream', streamHandler.stream.bind(streamHandler));
 app.get('/login', routes.login);
 app.get('/login_callback', routes.loginCallback);
 
-http.createServer(app).listen(app.get('port'));
+
+app.post('/tag', tagHandler.addTag.bind(tagHandler));
+
+http.createServer(app).listen(app.get('port'), function() {
+    console.log("server up");
+});

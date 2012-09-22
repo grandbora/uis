@@ -6,3 +6,26 @@ body {
 a {
   color: #00B7FF;
 }
+
+#stream img.bigimage {
+    display:none;
+    border:2px solid red;
+}
+
+#stream img.sm-image {
+
+}
+
+#box-create-tag {
+    position:absolute;
+    background-color:white;
+    border:1px solid grey;
+    display:none;
+    padding:20px;
+}
+
+.tag {
+    position:absolute;
+    background:green;
+    padding:10px;
+}
