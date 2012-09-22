@@ -8,6 +8,6 @@
   "dependencies": {
     "express": "latest",
     "ejs": "*",
-    "mongodb": "latest"
+    "mongodb": "*"
   }
 }
