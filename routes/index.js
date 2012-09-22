@@ -14,34 +14,38 @@ var oa = new oauth(
 	process.env.EYEEM_ACCESSTOKENPATH);
 
 var StreamHandler = function() {
-    this.streamManager = new sm.StreamManager();
+    this.streamManager = new sm.StreamManager(oa);
 }
+
 StreamHandler.prototype.index = function(req, res){
   res.render('index', { title: 'Express' });
 };
 
-StreamHandler.prototype.stream = function(req, res) {
-    var userId = req.params.userId;
-    this.streamManager.getStream(userId, function(data) {
-        res.render('stream',{
-            layout:true,
-            locals:data
-        });
-    });
-};
-
 StreamHandler.prototype.main = function(req, res) {
-    res.render('stream/main', {
-
-    });
+    res.render('stream/main');
 }
 
+StreamHandler.prototype.stream = function(req, res) {
+
+  var self = this;
+  this.streamManager.getMe(req.cookies['eyem_cookie'], function(result) {
+    var user = result.user;
+    self.streamManager.getStream(user.id, req.cookies['eyem_cookie'], function(result) {
+        res.render('stream/stream',{
+            layout:true,
+            locals:result
+        });
+    });
+  });
+};
+
+
 exports.login = function(req, res){
-var authorizeUrl = oa.getAuthorizeUrl({
+  var authorizeUrl = oa.getAuthorizeUrl({
         response_type:'code',
         redirect_uri:process.env.DOMAIN + '/login_callback'
     });
- res.redirect(authorizeUrl);
+  res.redirect(authorizeUrl);
 };
 
 exports.loginCallback = function(req, res){
@@ -52,7 +56,7 @@ exports.loginCallback = function(req, res){
     },function(error, access_token, refresh_token, results){
         console.dir(access_token);
       res.cookie('eyem_cookie', access_token);
-      res.redirect('/stream')
+      res.redirect('/stream');
     });
 };
 
