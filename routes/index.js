@@ -16,35 +16,37 @@ var oa = new oauth(
 	process.env.EYEEM_ACCESSTOKENPATH);
 
 var StreamHandler = function() {
-    this.streamManager = new sm.StreamManager();
+    this.streamManager = new sm.StreamManager(oa);
     this.tagManager = new tm.TagManager();
-
 }
+
 StreamHandler.prototype.index = function(req, res){
   res.render('index', { title: 'Express' });
 };
 
+StreamHandler.prototype.main = function(req, res) {
+    res.render('stream/main');
+}
+
 StreamHandler.prototype.stream = function(req, res) {
-    var userId = req.params.userId;
+  var access_token = req.cookies['eyem_cookie'];
     var self = this;
 
-    this.streamManager.getStream(userId, function(data) {
+  this.streamManager.getMe(access_token, function(result) {
+    var user = result.user;
+    self.streamManager.getStream(user.id, access_token, function(data) {
         var eyemIds = und.pluck(data.photos.items, "id");
         self.tagManager.getTags(eyemIds, data.photos.items, function() {
-            console.dir(data.photos.items);
-            res.render('stream',{
+            console.dir(data.photos.items); //tags attached
+            res.render('stream/stream',{
                 layout:true,
                 locals:data
             });
-        })
+        });
     });
+  });
 };
 
-StreamHandler.prototype.main = function(req, res) {
-    res.render('stream/main', {
-
-    });
-}
 
 var TagHandler = function() {
     this.tagManager = new tm.TagManager();
@@ -57,23 +59,22 @@ TagHandler.prototype.addTag = function(req, res) {
 };
 
 exports.login = function(req, res){
-var authorizeUrl = oa.getAuthorizeUrl({
+  var authorizeUrl = oa.getAuthorizeUrl({
         response_type:'code',
         redirect_uri:process.env.DOMAIN + '/login_callback'
     });
- res.redirect(authorizeUrl);
+  res.redirect(authorizeUrl);
 };
 
 exports.loginCallback = function(req, res){
 
-  console.log(oa._getAccessTokenUrl());
     oa.getOAuthAccessToken(req.query['code'],{
       grant_type:'authorization_code',
       redirect_uri:process.env.DOMAIN + '/login_callback'
     },function(error, access_token, refresh_token, results){
         console.dir(access_token);
       res.cookie('eyem_cookie', access_token);
-      res.redirect('/stream')
+      res.redirect('/stream');
     });
 };
 

@@ -1,36 +1,24 @@
 var https = require('https'),
     mongodb = require('mongoskin');
 
-var StreamManager = function()  {
-    this.clientId = process.env.EYEEM_CLIENTID;
-    var db= mongodb.db(process.env.MONGOLAB_URI);
+var StreamManager = function(oa)  {
+    var db = mongodb.db(process.env.MONGOLAB_URI);
     this.col = db.collection("uis");
+    this.oa = oa;
 }
 
-
-StreamManager.prototype.getStream = function(userId, cb) {
-
-    var options = {
-        host: 'eyeem.com',
-        port: 443,
-        path: '/api/v2/users/'+userId+'/photos?client_id=' + this.clientId,
-        method: 'GET'
-    };
-
-    var req = https.request(options, function(res) {
-        var data = "";
-        res.on('data', function(d) {
-            data += d;
-        });
-        res.on('end', function(d) {
-            var dd = JSON.parse(data);
-            cb(dd);
-        })
+StreamManager.prototype.getMe = function(accessToken, cb) {
+    this.oa.get(process.env.EYEEM_BASESITE + '/api/v2/users/me', accessToken, function(error, result, response){
+        var result = JSON.parse(result);
+        cb(result);
     });
-    req.end();
+}
 
-    req.on('error', function(e) {
-        console.error(e);
+StreamManager.prototype.getStream = function(userId, accessToken, cb) {
+
+    this.oa.get(process.env.EYEEM_BASESITE + '/api/v2/users/' + userId + '/photos', accessToken, function(error, result, response){
+        var result = JSON.parse(result);
+        cb(result);
     });
 }
 
