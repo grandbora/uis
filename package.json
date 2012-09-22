@@ -11,6 +11,7 @@
     "mongoskin": "*",
     "oauth": "*",
     "express-ejs-layouts": "*",
+    "express-partials": "*",
     "underscore": "*",
       "consolidate": "*"
   },

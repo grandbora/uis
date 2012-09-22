@@ -24,7 +24,8 @@ StreamHandler.prototype.index = function(req, res){
   res.render('index', {
       title: 'Express',
       friendstream:['a','b'],
-      userstream:['uc','ud']
+      userstream:['uc','ud'],
+      layout:false
   });
 };
 
@@ -34,6 +35,10 @@ StreamHandler.prototype.main = function(req, res) {
 
 StreamHandler.prototype.stream = function(req, res) {
   var access_token = req.cookies['eyem_cookie'];
+    if (!access_token) {
+        res.render("login");
+        return;
+    }
     var self = this;
 
   this.streamManager.getMe(access_token, function(result) {
@@ -46,14 +51,10 @@ StreamHandler.prototype.stream = function(req, res) {
 
             self.streamManager.getFriendStream(user.id, access_token, function(friendPhotos) {
                 res.render('stream/stream',{
-                    locals: {
                         user: user,
                         userPhotos:userPhotos,
                         friendPhotos:friendPhotos
-                    },
-                    layout:true
-                });
-
+                    });
             });
         });
     });
