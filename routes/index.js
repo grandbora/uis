@@ -37,18 +37,24 @@ StreamHandler.prototype.main = function(req, res) {
 }
 
 exports.login = function(req, res){
-    var authorizeUrl = oa.getAuthorizeUrl({
+var authorizeUrl = oa.getAuthorizeUrl({
         response_type:'code',
         redirect_uri:process.env.DOMAIN + '/login_callback'
     });
-    res.redirect(authorizeUrl);
+ res.redirect(authorizeUrl);
 };
 
 exports.loginCallback = function(req, res){
-    res.cookie('eyem_cookie', req.query['code']); //TODO move name to common place
-    res.send('authed');
+
+  console.log(oa._getAccessTokenUrl());
+    oa.getOAuthAccessToken(req.query['code'],{
+      grant_type:'authorization_code',
+      redirect_uri:process.env.DOMAIN + '/login_callback'
+    },function(error, access_token, refresh_token, results){
+        console.dir(access_token);
+      res.cookie('eyem_cookie', access_token);
+      res.redirect('/stream')
+    });
 };
 
-
 exports.StreamHandler = StreamHandler;
-
