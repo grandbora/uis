@@ -3,11 +3,10 @@
  * GET home page.
  */
 
-var mongodb = require('mongoskin');
+var sm = require('../logic/StreamManager.js');
 
 var StreamHandler = function() {
-    var db= mongodb.db(process.env.MONGOLAB_URI);
-    this.col = db.collection("uis");
+    this.streamManager = new sm.StreamManager();
 }
 StreamHandler.prototype.index = function(req, res){
   res.render('index', { title: 'Express' });
@@ -21,7 +20,13 @@ StreamHandler.prototype.tagsIndex = function(req, res) {
 };
 
 StreamHandler.prototype.stream = function(req, res) {
-    res.send("done");
+
+    this.streamManager.getStream(146292, function(data) {
+        res.render('stream',{
+            layout:true,
+            locals:data
+        });
+    });
 };
 
 exports.StreamHandler = StreamHandler;
