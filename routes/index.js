@@ -41,7 +41,6 @@ exports.login = function(req, res){
 
 exports.loginCallback = function(req, res){
 
-  console.log(oa._getAccessTokenUrl());
     oa.getOAuthAccessToken(req.query['code'],{
       grant_type:'authorization_code',
       redirect_uri:process.env.DOMAIN + '/login_callback'
