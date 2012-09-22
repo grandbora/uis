@@ -11,8 +11,6 @@ var express = require('express')
 
 var app = express();
 
-//test
-
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
@@ -33,6 +31,8 @@ app.configure('development', function(){
 });
 
 app.get('/', routes.index);
+app.get('/login', routes.login);
+app.get('/login_callback', routes.loginCallback);
 app.get('/tag', routes.tagsIndex);
 app.get('/users', user.list);
 
