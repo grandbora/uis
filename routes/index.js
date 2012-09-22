@@ -25,7 +25,8 @@ exports.login = function(req, res){
 };
 
 exports.loginCallback = function(req, res){
-	res.send("HERE AUTHED");
+	res.cookie('eyem_cookie', req.query['code']); //TODO move name to common place
+ 	res.send('authed');
 };
 
 exports.tagsIndex = function(req, res) {
