@@ -20,10 +20,9 @@ StreamHandler.prototype.index = function(req, res){
   res.render('index', { title: 'Express' });
 };
 
-
 StreamHandler.prototype.stream = function(req, res) {
-
-    this.streamManager.getStream(146292, function(data) {
+    var userId = req.params.userId;
+    this.streamManager.getStream(userId, function(data) {
         res.render('stream',{
             layout:true,
             locals:data
@@ -31,12 +30,18 @@ StreamHandler.prototype.stream = function(req, res) {
     });
 };
 
+StreamHandler.prototype.main = function(req, res) {
+    res.render('stream/main', {
+
+    });
+}
+
 exports.login = function(req, res){
-    var authorizeUrl = oa.getAuthorizeUrl({
+var authorizeUrl = oa.getAuthorizeUrl({
         response_type:'code',
         redirect_uri:process.env.DOMAIN + '/login_callback'
     });
-    res.redirect(authorizeUrl);
+ res.redirect(authorizeUrl);
 };
 
 exports.loginCallback = function(req, res){
@@ -44,7 +49,8 @@ exports.loginCallback = function(req, res){
     oa.getOAuthAccessToken(req.query['code'],{
       grant_type:'authorization_code',
       redirect_uri:process.env.DOMAIN + '/login_callback'
-    },function(nullValue, access_token, refresh_token, results){
+    },function(error, access_token, refresh_token, results){
+        console.dir(access_token);
       res.cookie('eyem_cookie', access_token);
       res.redirect('/stream')
     });
