@@ -21,7 +21,11 @@ var StreamHandler = function() {
 };
 
 StreamHandler.prototype.index = function(req, res){
-  res.render('index', { title: 'Express' });
+  res.render('index', {
+      title: 'Express',
+      friendstream:['a','b'],
+      userstream:['uc','ud']
+  });
 };
 
 StreamHandler.prototype.main = function(req, res) {

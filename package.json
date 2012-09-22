@@ -11,7 +11,8 @@
     "mongoskin": "*",
     "oauth": "*",
     "express-ejs-layouts": "*",
-    "underscore": "*"
+    "underscore": "*",
+      "consolidate": "*"
   },
    "engines": {
     "node" : "0.8.x",
