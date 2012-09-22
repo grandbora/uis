@@ -37,6 +37,4 @@ exports.tagsIndex = function(req, res) {
   col.findOne({type:'t'}, function(err, doc) {
         res.send(doc);
   });
-
-
 };
