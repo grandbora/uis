@@ -29,31 +29,44 @@ StreamHandler.prototype.stream = function(req, res) {
 
   var self = this;
   self.streamManager.getMe(req.cookies['eyem_cookie'], function(result) {
-
     self.streamManager.getStream(result.user.id, req.cookies['eyem_cookie'], function(userPhotos) {
-
       self.streamManager.getFriendStream(result.user.id, req.cookies['eyem_cookie'], function(friendPhotos) {
-        
-res.send({
-              user:result.user,
-              userPhotos:userPhotos,
-              friendPhotos:friendPhotos
-            });
-return;
-        // res.render('stream/stream',{
-        //     layout:true,
-        //     locals:{
-        //       user:user,
-        //       userPhotos:userPhotos,
-        //       friendPhotos:friendPhotos
-        //     }
-        //   });
+
+
+        console.log(userPhotos.photos.items);
+
+        console.log({
+          userPhotos:userPhotos,
+          user:result.user,
+          friendPhotos:friendPhotos
         });
 
+        // app.render('stream/stream', {
+        //   layout:true,
+        //   locals:{
+        //     user:result.user,
+        //     userPhotos:userPhotos,
+        //     friendPhotos:friendPhotos
+        //   }
+        // }, function(err, html){
+        //     res.send(htm);
+        // });
+        // return;
+
+        res.render('stream/main',{
+          layout:true,
+          locals:{
+            user:result.user,
+            userPhotos:userPhotos,
+            friendPhotos:friendPhotos
+          }
+        });
+
+
+
       });
-
     });
-
+  });
 };
 
 
