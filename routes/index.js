@@ -31,7 +31,6 @@ StreamHandler.prototype.stream = function(req, res) {
     });
 };
 
-
 exports.login = function(req, res){
     var authorizeUrl = oa.getAuthorizeUrl({
         response_type:'code',
@@ -41,8 +40,15 @@ exports.login = function(req, res){
 };
 
 exports.loginCallback = function(req, res){
-    res.cookie('eyem_cookie', req.query['code']); //TODO move name to common place
-    res.send('authed');
+
+  console.log(oa._getAccessTokenUrl());
+    oa.getOAuthAccessToken(req.query['code'],{
+      grant_type:'authorization_code',
+      redirect_uri:process.env.DOMAIN + '/login_callback'
+    },function(nullValue, access_token, refresh_token, results){
+      res.cookie('eyem_cookie', access_token);
+      res.redirect('/stream')
+    });
 };
 
 exports.StreamHandler = StreamHandler;
