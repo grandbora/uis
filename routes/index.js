@@ -5,18 +5,24 @@
 
 var mongodb = require('mongoskin');
 
-exports.index = function(req, res){
+var StreamHandler = function() {
+    var db= mongodb.db(process.env.MONGOLAB_URI);
+    this.col = db.collection("uis");
+}
+StreamHandler.prototype.index = function(req, res){
   res.render('index', { title: 'Express' });
 };
 
-exports.tagsIndex = function(req, res) {
-
-  var db= mongodb.db(process.env.MONGOLAB_URI);
-  var col = db.collection("uis");
-
-  col.findOne({type:'t'}, function(err, doc) {
+StreamHandler.prototype.tagsIndex = function(req, res) {
+  this.col.findOne({type:'t'}, function(err, doc) {
         res.send(doc);
   });
 
-
 };
+
+StreamHandler.prototype.stream = function(req, res) {
+    res.send("done");
+};
+
+exports.StreamHandler = StreamHandler;
+

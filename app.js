@@ -5,7 +5,6 @@
 
 var express = require('express')
   , routes = require('./routes')
-  , user = require('./routes/user')
   , http = require('http')
   , path = require('path');
 
@@ -32,9 +31,11 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.get('/', routes.index);
-app.get('/tag', routes.tagsIndex);
-app.get('/users', user.list);
+var streamHandler = new routes.StreamHandler();
+
+app.get('/', streamHandler.index.bind(streamHandler));
+app.get('/tag', streamHandler.tagsIndex.bind(streamHandler));
+app.get('/stream', streamHandler.stream.bind(streamHandler));
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
