@@ -40,7 +40,7 @@
             </div>
         </a>
         <div id="imgUser">
-            <% if (user) { %>
+            <% if (typeof user !== "undefined") { %>
             <img src="<%=user.thumbUrl%>" />
             <% } else { %>
             <h1>?</h1>
