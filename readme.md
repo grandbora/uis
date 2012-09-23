@@ -28,5 +28,6 @@ functionality is just a matter of implementing API endpoints.
 We're creating pixel-precise additional tags on photos so you can tag everyday ("social") objects as you discover
 them on an image. An overlay shows options to retrieve additional information about the tagged object, currently
 only a map view is supported, though. Using semantic databases like Freebase should make it possible to add
-additional value to your photos. 
+additional value to your photos.   
 
+  Live : [http://uis.herokuapp.com/](http://uis.herokuapp.com/)
