@@ -38,17 +38,11 @@ StreamHandler.prototype.stream = function(req, res) {
   }
   var self = this;
 
-  self.streamManager.getMe(accessToken, function(result) {
-    self.streamManager.getStream(result.user.id, accessToken, function(userPhotos) {
-      self.streamManager.getFriendStream(result.user.id, accessToken, function(friendPhotos) {
-
-        var eyemIds = und.pluck(userPhotos.photos.items, "id");
-        self.tagManager.getTags(eyemIds, userPhotos.photos.items, function() {
-
-          console.dir(userPhotos.photos.items);
-
+  self.streamManager.getMe(accessToken, function(user) {
+    self.streamManager.getStream(user.id, accessToken, function(userPhotos) {
+      self.streamManager.getFriendStream(user.id, accessToken, function(friendPhotos) {
           res.render('stream/main',{
-            user: result.user,
+            user: user,
             userPhotos:userPhotos,
             friendPhotos:friendPhotos,
             layout:true
@@ -56,8 +50,8 @@ StreamHandler.prototype.stream = function(req, res) {
         });
       });
     });
-  });
-};
+}
+
 
 var TagHandler = function() {
     this.tagManager = new tm.TagManager();

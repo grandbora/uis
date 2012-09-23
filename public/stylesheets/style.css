@@ -7,12 +7,12 @@ a {
   color: #00B7FF;
 }
 
-#stream img.bigimage {
+.stream img.bigimage {
     display:none;
     border:2px solid red;
 }
 
-#stream img.sm-image {
+.stream img.sm-image {
 
 }
 

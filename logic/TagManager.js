@@ -22,17 +22,10 @@ TagManager.prototype.addTag = function(tag) {
     });
 };
 
-TagManager.prototype.getTags = function(ids, photos, cb) {
+TagManager.prototype.getTags = function(ids, cb) {
     this.col.find({resType:'ee-photo', resId: {$in: ids}}).toArray(function(err, tags) {
-        //console.dir(photos);
-        und.each(tags, function(tag) {
-            var photo = und.find(photos, function(ph) {
-                return (ph.id == tag.resId)
-            });
-
-            photo.tag = tag;
-        })
-        cb();
+        //console.dir(tags);
+        cb(tags);
     });
 }
 
