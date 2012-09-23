@@ -1,5 +1,6 @@
 var sm = require('../logic/StreamManager.js')
     , tm = require('../logic/TagManager.js')
+    , am = require('../logic/ApiManager.js')
     , und = require("underscore")
     , oauth = require('oauth').OAuth2;
 
@@ -44,6 +45,8 @@ StreamHandler.prototype.stream = function(req, res) {
         var eyemIds = und.pluck(userPhotos.photos.items, "id");
         self.tagManager.getTags(eyemIds, userPhotos.photos.items, function() {
 
+          console.dir(userPhotos.photos.items);
+
           res.render('stream/main',{
             user: result.user,
             userPhotos:userPhotos,
@@ -58,12 +61,19 @@ StreamHandler.prototype.stream = function(req, res) {
 
 var TagHandler = function() {
     this.tagManager = new tm.TagManager();
+    this.apiManager = new am.ApiManager();
 };
 
 TagHandler.prototype.addTag = function(req, res) {
     var tag = req.body;
     this.tagManager.addTag(tag);
     res.send(200,{result:'ok'});
+};
+
+TagHandler.prototype.fetchTagData = function(req, res) {
+    var tagData = this.apiManager.fetchTagData({tagName:'nirvana'},{"latitude": 41.9135,"longitude": -87.622},function(result) {
+      res.send(result);
+    });
 };
 
 exports.login = function(req, res){

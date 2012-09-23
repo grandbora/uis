@@ -13,7 +13,8 @@
     "express-ejs-layouts": "*",
     "express-partials": "*",
     "underscore": "*",
-      "consolidate": "*"
+    "consolidate": "*",
+    "request": "*"
   },
    "engines": {
     "node" : "0.8.x",

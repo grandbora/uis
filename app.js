@@ -41,6 +41,7 @@ app.get('/login_callback', routes.loginCallback);
 
 
 app.post('/tag', tagHandler.addTag.bind(tagHandler));
+app.get('/tag', tagHandler.fetchTagData.bind(tagHandler));
 
 http.createServer(app).listen(app.get('port'), function() {
     console.log("server up");
