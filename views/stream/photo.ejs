@@ -8,16 +8,17 @@
             if ( (eyeemTag.type == 'city') ||(eyeemTag.type == 'country')||(eyeemTag.type == 'venue') ) {
     %>
     <div id="box-source-actions">
-        <div id="map-placeholder">
-            <img src="" class="map"/>
-        </div>
         <button data-qtype="wikipedia">Wikipedia </button>
         <button data-qtype="news">News</button>
         <button data-qtype="events">Events</button>
         <button data-qtype="buy">Buy</button>
         <button data-qtype="info">Info</button>
-        <button data-qtype="organization">Organization</button>
+        <button data-qtype="organization">Places</button>
         <button data-qtype="map">Map</button>
+        <div id="map-placeholder">
+            <img src="" class="map"/>
+            <div id="map-container"></div>
+        </div>
     </div>
 
         <button class="btn-tagAction location"
@@ -83,7 +84,52 @@
                         $.get("/tag", query, function(res, err) {
                             if (res) {
                                 if (res.type == 'map') {
+                                    $('#map-placeholder img').show();
+                                    $('#map-placeholder #map-container').hide();
                                     $('#map-placeholder img').attr('src', res.mapUrl);
+                                }
+                                if (res.type == 'organization') {
+                                    nokia.Settings.set("appId", "irbEtA17e7khRQcuDjQB"); 
+                                    nokia.Settings.set("authenticationToken", "y8RuepVEq_-4eIrjcSljPw");
+
+                                    $('#map-placeholder img').hide();
+                                    $('#map-placeholder #map-container').empty().show();
+                                    var map = new nokia.maps.map.Display(
+                                    document.getElementById("map-container"), {
+                                        components: [ 
+                                            // Behavior collection
+                                            new nokia.maps.map.component.Behavior(),
+                                            new nokia.maps.map.component.ZoomBar(),
+                                            new nokia.maps.map.component.Overview(),
+                                            new nokia.maps.map.component.TypeSelector(),
+                                            new nokia.maps.map.component.ScaleBar() ],
+                                        // Zoom level for the map
+                                        'zoomLevel': 17,
+                                        // Map center coordinates
+                                        'center': [query.latitude, query.longitude] 
+                                    });
+                                    map.set("baseMapType", nokia.maps.map.Display.SATELLITE);
+
+                                    $.each(res.response.results.items, function(index,location){
+                                        // Create a marker and add it to the map
+                                        var marker = new nokia.maps.map.StandardMarker(location.position, {
+                                            text: location.title // Small label
+                                        });
+                                        map.objects.add(marker);
+                                    });
+
+                                    var marker = new nokia.maps.map.Marker(
+                                    new nokia.maps.geo.Coordinate(query.latitude, query.longitude),{
+                                            title: "CENTER",
+                                            visibility: true,
+                                            icon: "http://www.ebparks.org/Assets/_Nav_Categories/About_Us/Fire/Google+Yellow+Map+Icon.jpg",
+                                            // Offset the top left icon corner so that it's
+                                            // Centered above the coordinate
+                                            //anchor: new nokia.maps.util.Point(32, 32) 
+                                            });
+
+                                    map.objects.add(marker);
+
                                 }
                             }
                         });

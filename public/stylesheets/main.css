@@ -352,3 +352,11 @@ textarea[contenteditable] {
        only screen and (min-resolution: 144dpi) {
     /* Style adjustments for viewports that meet the condition */
 }
+
+
+
+
+#map-container {
+    width: 550px;
+    height: 350px;
+}

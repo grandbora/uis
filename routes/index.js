@@ -101,8 +101,10 @@ TagHandler.prototype.fetchTagData = function(req, res) {
     var tagType = req.param('type');
     var subType = req.param('subtype'); //city, venue, country
 
+    console.dir(req.query);
 
-    if (tagType == 'location') {
+
+    if (qtype == 'map') {
         var latitude = req.param('latitude');
         var longitude = req.param('longitude');
 
@@ -113,7 +115,19 @@ TagHandler.prototype.fetchTagData = function(req, res) {
             res.json(200,{type:'map', mapUrl:mapUrl});
         }
 
-    } else {
+    } else if (qtype == 'organization') {
+        var latitude = req.param('latitude');
+        var longitude = req.param('longitude');
+
+        if (!latitude) {
+            res.send(404, {"notice":"no boundaries available"});
+        } else {
+            var mapUrl = this.apiManager.fetchLocationInformation(req.query,function(result){
+              res.json(200,{type:'organization', response: result});
+            });
+        }
+
+    }else{
         res.send(404, {"notice":"no information available"});
     }
     /*var tagData = this.apiManager.fetchTagData({tagName:'nirvana', categoryName:null},{"latitude": 41.9135,"longitude": -87.622},function(result) {

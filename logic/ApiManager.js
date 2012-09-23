@@ -24,9 +24,24 @@ ApiManager.prototype.fetchTagData = function(tag, photo, cb) { //Freebase
  * @param opts tagName: tagName, locationType: subType
  * @param cb
  */
-ApiManager.prototype.fetchLocationInformation = function(opts, cb) {
+ApiManager.prototype.fetchLocationInformation = function(options, cb) {
+    
+    var service_url = 'http://places.nlp.nokia.com/places/v1/discover/around?';
+    service_url += 'at='+options.latitude+','+options.longitude;
+    service_url += '&app_id=irbEtA17e7khRQcuDjQB&app_code=y8RuepVEq_-4eIrjcSljPw&tf=plain&pretty=true';
 
+//console.log(service_url);
 
+    request({
+        url :service_url,
+        headers: {
+            'Accept' : 'application/json'
+        }
+    }, function (error, response, body) {
+        var jres = JSON.parse(body);
+        //console.dir(jres);
+        cb(jres);
+    });
 };
 
 ApiManager.prototype.getMapData = function(lat, lon) {
