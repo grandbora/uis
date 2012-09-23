@@ -39,17 +39,22 @@
                 &nbsp;
             </div>
         </a>
+
         <a href="/logout">
             <div id="logout-dummy">
                 &nbsp;
             </div>
         </a>
+
         <div id="imgUser">
             <% if (typeof user !== "undefined") { %>
             <img src="<%=user.thumbUrl%>" />
             <% } else { %>
             <h1>?</h1>
             <% } %>
+        </div>
+        <div id="imgLogo">
+            <img src="/images/logo_big.png" />
         </div>
         <div id="header-bg">
 

@@ -101,15 +101,25 @@ a {
     position:relative;
 }
 
-#header #imgUser {
+#header #imgUser,#header #imgLogo{
+    position:absolute;
+}
+#header #imgUser img, #header #imgLogo img {
     width:70px;
     height:70px;
-    background:red;
-    position:absolute;
+}
+#header #imgUser{
     top:10px;
     right:10px;
     z-index:5;
 }
+
+#header #imgLogo{
+    top:0px;
+    left:5px;
+    z-index:5;
+}
+
 #header #imgUser-dummy {
     width:70px;
     height:70px;
@@ -128,10 +138,7 @@ a {
     z-index:50;
 }
 
-#header #imgUser img {
-    width:70px;
-    height:70px;
-}
+
 
 
 #body {
