@@ -137,7 +137,7 @@ exports.loginCallback = function(req, res){
     },function(error, access_token, refresh_token, results){
         console.dir(access_token);
       res.cookie('eyem_cookie', access_token);
-      res.redirect('/stream');
+      res.redirect('/stream/me');
     });
 };
 

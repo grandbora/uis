@@ -197,6 +197,7 @@ ul#stream li img.sm-image {
     color:white;
     border:2px solid #FFF;
 }
+#box-search-results,
 #box-source-actions {
     position:absolute;
     width:620px;
@@ -205,7 +206,6 @@ ul#stream li img.sm-image {
     bottom:0px;
     left:10px;
     display:none;
-    opacity: 0.95;
 }
 
 #box-source-actions .btn {
@@ -214,6 +214,7 @@ ul#stream li img.sm-image {
     float:left;
     margin:5px;
 }
+
 
 #box-source-actions .btn.wikipedia {background-image: url('/images/wiki_button.png');}
 #box-source-actions .btn.news {background-image: url('/images/news_button.png');}
@@ -224,12 +225,15 @@ ul#stream li img.sm-image {
 #box-source-actions .btn.map {background-image: url('/images/maps_button.png');}
 
 
+
 #box-source-actions button.close {
     position:absolute;
     top:4px; right:4px;
 }
-#box-source-actions #map-placeholder {
+#box-search-results #map-placeholder {
+    margin:10px;
 }
+
 #box-create-tag {
     position:absolute;
     background-color:white;

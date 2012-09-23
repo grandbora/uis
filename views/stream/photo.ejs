@@ -9,9 +9,6 @@
 
         <div id="box-source-actions">
             <button class="close">close</button>
-            <div id="map-placeholder">
-                <img src="" class="map"/>
-            </div>
             <div class="btn wikipedia" data-qtype="wikipedia"></div>
             <div class="btn news" data-qtype="news" ></div>
             <div class="btn events" data-qtype="events" ></div>
@@ -20,6 +17,11 @@
             <div class="btn map" data-qtype="map" ></div>
         </div>
 
+        <div id="box-search-results">
+            <div id="map-placeholder">
+                <img src="" class="map"/>
+            </div>
+        </div>
         <% if (photo.uisTags) {
             for (i=0;i< photo.uisTags.length;i++) {
                 var uisTag = photo.uisTags[i];
@@ -80,7 +82,6 @@
         <option value="geographic">Geographic (i.e. Land, City)</option>
         <option value="celebrities_society">Celebrities & Society</option>
         <option value="sports">Sports</option>
-        <option value="multimedia">Multimedia</option>
         <option value="science_education">Science & Education</option>
         <option value="sports">Sports</option>
         <option value="multimedia">Multimedia</option>
@@ -114,18 +115,21 @@
                        longitude: $(this).data('gps-lon')
                    };
                    console.dir(query);
-                   $('#box-source-actions .action').off();
-                   $('#box-source-actions .action').on("click", function() {
+                   $('#box-source-actions .btn').off();
+                   $('#box-source-actions .btn').on("click", function() {
                         query.qtype = $(this).data('qtype');
                         $.get("/tag", query, function(res, err) {
                             if (res) {
+                                $('#box-source-actions').fadeOut();
+                                $('#box-search-results').fadeIn();
+
                                 if (res.type == 'map') {
-                                    $('#map-placeholder img').attr('src', res.mapUrl);
+                                    $('#box-search-results #map-placeholder img').attr('src', res.mapUrl);
                                 }
                             }
                         });
                    });
-
+                   $('#box-search-results').hide();
                    $('#box-source-actions').show();
                });
 

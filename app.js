@@ -34,6 +34,7 @@ var streamHandler = new routes.StreamHandler();
 var tagHandler = new routes.TagHandler();
 
 app.get('/', streamHandler.index.bind(streamHandler));
+
 app.get('/stream/:streamType', streamHandler.stream.bind(streamHandler));
 app.get('/photo/:photoId', streamHandler.photo.bind(streamHandler));
 
