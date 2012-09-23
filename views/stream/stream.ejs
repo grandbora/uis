@@ -1,8 +1,7 @@
 
-
-<ul id="stream">
-    <% for(var i=0; i<currentPhotos.items.length; i++) {
-        var photo = currentPhotos.items[i];
+<ul class="stream" id="<%=streamId%>">
+    <% for(var i=0; i<photos.length; i++) {
+        var photo = photos[i];
     %>
     <li style="position:relative;">
         <img src="<%=photo.thumbUrl %>" class="sm-image"/>
@@ -18,51 +17,6 @@
     <% } %>
 </ul>
 
-<div id="box-create-tag">
-    <input type="text" name="tag" /><br/>
-    <select name="category">
-        <option value="beverage">Beverage</option>
-        <option value="device">Device</option>
-        <option value="sightseeing">Sightseeing</option>
-    </select>
-    <br />
-    <button>Tag!</button>
-</div>
 
-<script type="text/javascript">
-    $( function() {
-        $('#stream').find('li img.sm-image').on('click', function() {
-            $(this).hide();
-            $(this).next('img.bigimage').show();
-        });
 
-        $('#stream').find('img.bigimage').on('click', function(evt) {
-            var eeid = ($(this).data('id'));
-            var resType = ($(this).data('restype'));
-            var tag = {resType: resType,resId: eeid, x: evt.offsetX, y:evt.offsetY};
-            var theLi = $(this).parent();
 
-            var $tagbox =$('#box-create-tag');
-            $tagbox.show();
-            var offset = $(this).offset();
-            $tagbox.offset({ top: offset.top + tag.y, left: offset.left + tag.x});
-
-            $tagbox.find('button').off();
-            $tagbox.find('button').on('click', function() {
-                tag.tagname = $tagbox.find("input[name=tag]").val();
-                tag.category = $tagbox.find("select[name=category]").val();
-
-                $.post('/tag', tag, function(resp){
-                    var taginf = '<div class="tag">'+tag.tagname+'('+tag.category+')</div>';
-                    var $taginf = $(taginf);
-                    theLi.append($taginf);
-                    $taginf.css('top',tag.y);
-                    $taginf.css('left', tag.x);
-                    $tagbox.hide();
-                });
-            });
-
-        })
-    });
-
-</script>
