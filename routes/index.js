@@ -16,18 +16,37 @@ var StreamHandler = function() {
 };
 
 StreamHandler.prototype.index = function(req, res){
+  if (req.cookies['eyem_cookie'])
+     res.redirect("/stream");
+
   res.render('index', {
-      title: 'Express',
-      friendstream:['a','b'],
-      userstream:['uc','ud'],
-      layout:false
+      layout:true
   });
 };
 
 StreamHandler.prototype.main = function(req, res) {
     res.render('stream/main');
 };
+StreamHandler.prototype.photo = function(req,res) {
+    var accessToken = req.cookies['eyem_cookie'];
+    if (!accessToken) {
+        res.render("login");
+        return;
+    }
+    var self = this;
+    var photoId = req.params.photoId;
+    this.streamManager.getMe(accessToken, function(user) {
+        self.streamManager.getPhoto(photoId, accessToken, function(photo) {
+            console.dir(photo);
+            res.render('stream/photo', {
+                photo:photo,
+                user:user,
+                layout:true
+            })
+        });
+    });
 
+};
 StreamHandler.prototype.stream = function(req, res) {
 
   var accessToken = req.cookies['eyem_cookie'];
@@ -36,18 +55,29 @@ StreamHandler.prototype.stream = function(req, res) {
       return;
   }
   var self = this;
+    var streamType = req.params.streamType;
+    self.streamManager.getMe(accessToken, function(user) {
+    var streamTitle;
 
-  self.streamManager.getMe(accessToken, function(user) {
-    self.streamManager.getStream(user.id, accessToken, function(userPhotos) {
-      self.streamManager.getFriendStream(user.id, accessToken, function(friendPhotos) {
-          res.render('stream/main',{
-            user: user,
-            userPhotos:userPhotos,
-            friendPhotos:friendPhotos,
-            layout:true
-          });
-        });
-      });
+        if (streamType == 'me')
+            streamTitle = "My Photos";
+        else if (streamType == 'friends')
+            streamTitle = "My Friends' Photos";
+
+        var cb = function(photos) {
+            res.render('stream/main',{
+                user: user,
+                photos:photos,
+                title:streamTitle,
+                layout:true
+            });
+        };
+      if (streamType == 'me') {
+          self.streamManager.getStream(user.id, accessToken, cb);
+
+      } else if (streamType == 'friends') {
+          self.streamManager.getFriendStream(user.id, accessToken, cb);
+      }
     });
 }
 

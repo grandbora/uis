@@ -19,6 +19,7 @@ var StreamManager = function(oa)  {
 StreamManager.prototype.getMe = function(accessToken, cb) {
     this.oa.get(process.env.EYEEM_BASESITE + '/api/v2/users/me', accessToken,  function(err, res) {
         var result = JSON.parse(res);
+        console.dir (result.user);
         cb(result.user);
     });
 };
@@ -40,6 +41,13 @@ StreamManager.prototype.getFriendStream = function(userId, accessToken, cb) {
     });
 };
 
+StreamManager.prototype.getPhoto = function(photoId, accessToken, cb) {
+    var self = this;
+    this.oa.get(process.env.EYEEM_BASESITE + '/api/v2/photos/'+photoId, accessToken, function(error, result) {
+        var result = JSON.parse(result);
+        self.augmentPhoto(result.photo, cb);
+    });
+};
 /**
  * enhance the photo stream with tag information
  * callback is called with photos + tags
@@ -69,11 +77,14 @@ StreamManager.prototype.augmentStream = function(photos, cb){
         cb(photos);
     });
 
-        //
-    /*
-
-
-     */
 };
 
+StreamManager.prototype.augmentPhoto = function(photo, cb) {
+    var pId = photo.id + "";
+    var pIds = [pId];
+    this.tagManager.getTags(pIds, function(tags) {
+       photo.tags = tags;
+        cb(photo);
+    });
+}
 exports.StreamManager = StreamManager;

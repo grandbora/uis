@@ -1,33 +1,10 @@
-
-<div class="user">
-    USER PHOTO
-    <% var photos = userPhotos;
-        var streamId = 'user-stream';
-    %>
     <% include stream %>
-</div>
-<div class="user">
-    FRIEND PHOTO
-    <% photos = friendPhotos;
-        streamId = 'friend-stream';
-    %>
-    <% include stream %>
-</div>
 
-<div id="box-create-tag">
-    <input type="text" name="tag" /><br/>
-    <select name="category">
-        <option value="beverage">Beverage</option>
-        <option value="device">Device</option>
-        <option value="sightseeing">Sightseeing</option>
-    </select>
-    <br />
-    <button>Tag!</button>
-</div>
+
 
 <script type="text/javascript">
     $( function() {
-        $('li img.sm-image').on('click', function() {
+      /*  $('li img.sm-image').on('click', function() {
             $(this).hide();
             $(this).next('img.bigimage').show();
         });
@@ -58,7 +35,7 @@
                 });
             });
 
-        })
+        })*/
     });
 
 </script>

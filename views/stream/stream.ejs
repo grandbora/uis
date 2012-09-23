@@ -1,16 +1,15 @@
+<h1><%=title%></h1>
 
-<ul class="stream" id="<%=streamId%>">
+<ul id="stream">
     <% for(var i=0; i<photos.length; i++) {
         var photo = photos[i];
     %>
     <li style="position:relative;">
-        <img src="<%=photo.thumbUrl %>" class="sm-image"/>
-        <img src="<%=photo.photoUrl %>" data-restype="ee-photo" data-id="<%=photo.id%>"
-            class="bigimage">
+        <a href="/photo/<%=photo.id%>"><img src="<%=photo.thumbUrl %>" class="sm-image"/></a>
 
         <% if (photo.tags) {
             for (j=0;j<photo.tags.length;j++) { %>
-            <p> <%=photo.tags[j].tagname %> </p>
+            <!--p> <%=photo.tags[j].tagname %> </p-->
         <% }
         }
         %>
