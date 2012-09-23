@@ -65,7 +65,7 @@ TagHandler.prototype.addTag = function(req, res) {
 };
 
 TagHandler.prototype.fetchTagData = function(req, res) {
-    var tagData = this.apiManager.fetchTagData({tagName:'nirvana'},{"latitude": 41.9135,"longitude": -87.622},function(result) {
+    var tagData = this.apiManager.fetchTagData({tagName:'nirvana', categoryName:null},{"latitude": 41.9135,"longitude": -87.622},function(result) {
       res.send(result);
     });
 };
