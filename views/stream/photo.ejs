@@ -37,11 +37,14 @@
     <% if (photo.eyeemTags) {
         for(i=0;i<photo.eyeemTags.length;i++) {
             var eyeemTag =  photo.eyeemTags[i];
+            var locationCls = '';
             if ( (eyeemTag.type == 'city') ||(eyeemTag.type == 'country')||(eyeemTag.type == 'venue') ) {
+                locationCls = 'location';
+            }
     %>
-        <button class="btn-tagAction location"
+        <button class="btn-tagAction <%=locationCls%>"
                 data-tagtype="eyeem"
-                data-type="location"
+                data-type="<%=locationCls%>"
                 data-subtype="<%=eyeemTag.type%>"
                 data-name="<%=eyeemTag.name%>"
         <% if (eyeemTag.location) { %>
@@ -49,7 +52,6 @@
                 data-gps-lon="<%=eyeemTag.location.longitude%>"
         <% } %> ><%=eyeemTag.name%></button>
     <%
-            }
         }
     }
     %>
