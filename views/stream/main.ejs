@@ -1,17 +1,16 @@
 
 <div class="user">
     USER PHOTO
-    <% var photos = userPhotos.photos.items;
+    <% var photos = userPhotos;
         var streamId = 'user-stream';
     %>
     <% include stream %>
 </div>
 <div class="user">
     FRIEND PHOTO
-    <% photos = friendPhotos.friendsPhotos.items;
+    <% photos = friendPhotos;
         streamId = 'friend-stream';
     %>
-
     <% include stream %>
 </div>
 
