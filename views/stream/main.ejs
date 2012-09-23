@@ -4,13 +4,11 @@
 </div>
 <div class="user">
     USER PHOTO
-    <p> <%=locals.userPhotos.photos.items[0].photoUrl%> </p>
-	
+    <% var currentPhotos = userPhotos.photos; %>
+    <% include stream %>
 </div>
-
 <div class="user">
     FRIEND PHOTO
+    <% currentPhotos = friendPhotos.friendsPhotos; %>
+    <% include stream %>
 </div>
-
-
-

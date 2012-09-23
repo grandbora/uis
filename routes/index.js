@@ -19,7 +19,8 @@ StreamHandler.prototype.index = function(req, res){
   res.render('index', {
       title: 'Express',
       friendstream:['a','b'],
-      userstream:['uc','ud']
+      userstream:['uc','ud'],
+      layout:false
   });
 };
 
@@ -28,7 +29,12 @@ StreamHandler.prototype.main = function(req, res) {
 };
 
 StreamHandler.prototype.stream = function(req, res) {
+
   var accessToken = req.cookies['eyem_cookie'];
+ if (!accessToken) {
+      res.render("login");
+      return;
+  }
   var self = this;
 
   self.streamManager.getMe(accessToken, function(result) {
@@ -39,12 +45,11 @@ StreamHandler.prototype.stream = function(req, res) {
         self.tagManager.getTags(eyemIds, userPhotos.photos.items, function() {
 
           res.render('stream/main',{
-              user: result.user,
-              userPhotos:userPhotos,
-              friendPhotos:friendPhotos
-              layout:true
+            user: result.user,
+            userPhotos:userPhotos,
+            friendPhotos:friendPhotos,
+            layout:true
           });
-
         });
       });
     });

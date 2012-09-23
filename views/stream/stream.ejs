@@ -1,8 +1,8 @@
 
 
 <ul id="stream">
-    <% for(var i=0; i<userPhotos.photos.items.length; i++) {
-        var photo = userPhotos.photos.items[i];
+    <% for(var i=0; i<currentPhotos.items.length; i++) {
+        var photo = currentPhotos.items[i];
     %>
     <li style="position:relative;">
         <img src="<%=photo.thumbUrl %>" class="sm-image"/>
