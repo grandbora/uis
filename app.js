@@ -40,7 +40,7 @@ app.get('/photo/:photoId', streamHandler.photo.bind(streamHandler));
 
 app.get('/login', routes.login);
 app.get('/login_callback', routes.loginCallback);
-
+app.get('/logout', routes.logout);
 
 app.post('/tag', tagHandler.addTag.bind(tagHandler));
 app.get('/tag', tagHandler.fetchTagData.bind(tagHandler));

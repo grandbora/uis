@@ -119,6 +119,15 @@ a {
     z-index:50;
 }
 
+#header #logout-dummy {
+    width:70px;
+    height:70px;
+    position:absolute;
+    top:10px;
+    left:10px;
+    z-index:50;
+}
+
 #header #imgUser img {
     width:70px;
     height:70px;
