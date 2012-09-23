@@ -2,7 +2,42 @@
 
     <img src="<%=photo.photoUrl%>">
 
+    <% if (photo.eyeemTags) {
+        for(i=0;i<photo.eyeemTags.length;i++) {
+            var eyeemTag =  photo.eyeemTags[i];
+            if ( (eyeemTag.type == 'city') ||(eyeemTag.type == 'country')||(eyeemTag.type == 'venue') ) {
+    %>
+    <div id="box-source-actions">
+        <div id="map-placeholder">
+            <img src="" class="map"/>
+        </div>
+        <button data-qtype="wikipedia">Wikipedia </button>
+        <button data-qtype="news">News</button>
+        <button data-qtype="events">Events</button>
+        <button data-qtype="buy">Buy</button>
+        <button data-qtype="info">Info</button>
+        <button data-qtype="organization">Organization</button>
+        <button data-qtype="map">Map</button>
+    </div>
+
+        <button class="btn-tagAction location"
+                data-type="location"
+                data-subtype="<%=eyeemTag.type%>"
+                data-name="<%=eyeemTag.name%>"
+        <% if (eyeemTag.location) { %>
+                data-gps-lat="<%=eyeemTag.location.latitude%>"
+                data-gps-lon="<%=eyeemTag.location.longitude%>"
+        <% } %> ><%=eyeemTag.name%></button>
+    <%
+            }
+        }
+
+    }
+    %>
+
+
 </div>
+
 
 <div id="box-create-tag">
     <input type="text" name="tag" /><br/>
@@ -29,3 +64,34 @@
     <br />
     <button>Tag!</button>
 </div>
+
+        <script type="text/javascript">
+            $(function() {
+               $('.btn-tagAction').on('click', function() {
+                   $('#map-placeholder img').attr('src','');
+                   var query = {
+                       name: $(this).data('name'),
+                       type: $(this).data('type'),
+                       subtype: $(this).data('subtype'),
+                       latitude: $(this).data('gps-lat'),
+                       longitude: $(this).data('gps-lon')
+                   };
+                   console.dir(query);
+                   $('#box-source-actions button').off();
+                   $('#box-source-actions button').on("click", function() {
+                        query.qtype = $(this).data('qtype');
+                        $.get("/tag", query, function(res, err) {
+                            if (res) {
+                                if (res.type == 'map') {
+                                    $('#map-placeholder img').attr('src', res.mapUrl);
+                                }
+                            }
+                        });
+                   });
+
+                   $('#box-source-actions').show();
+               })
+            });
+
+
+        </script>

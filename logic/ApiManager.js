@@ -8,42 +8,52 @@ ApiManager.prototype.fetchTagData = function(tag, photo, cb) { //Freebase
     //Nokia maps
     var mapStr;
     if (photo.latitude && photo.longitude) {
-        mapStr = getMapData(photo.latitude,photo.longitude);
+        mapStr = this.getMapData(photo.latitude,photo.longitude);
     }
 
-    getFreebaseData(tag, function(result) {
+    this.getFreebaseData(tag, function(result) {
         cb({
-            freebase : JSON.parse(result),
+            freebase : result,
             map : mapStr
         });
     });
 };
 
-var getMapData = function(lat, lon) {
+/**
+ *
+ * @param opts tagName: tagName, locationType: subType
+ * @param cb
+ */
+ApiManager.prototype.fetchLocationInformation = function(opts, cb) {
 
-    var app_id = 'irbEtA17e7khRQcuDjQB';
-    var token = 'y8RuepVEq_-4eIrjcSljPw';
-    var service_url = 'http://m.nok.it/?app_id='+app_id+'&token='+token+'&nord'+'&lat='+lat+'&lon='+lon;
-    return "<img src='"+service_url+"'/>";
+
+};
+
+ApiManager.prototype.getMapData = function(lat, lon) {
+
+    var app_id = 'fsC6OlCE6qzkicvU81wp';
+    var token = 'i1WFLjHHSs85s3uHsNT1Owd';
+    return 'http://m.nok.it/?app_id='+app_id+'&token='+token+'&nord'+'&lat='+lat+'&lon='+lon;
 };
 
 
-var getFreebaseData = function(tag, cb) {
+ApiManager.prototype.getFreebaseData = function(tag, cb) {
 
     //FreeBase
     var query = [{'id': null, 'name': tag.tagName, 'type': tag.categoryName}];
+    query.type = '/music/album';
     var query_envelope = {'query' : query};
     var service_url = 'http://api.freebase.com/api/service/mqlread';
     service_url += '?query=' + JSON.stringify(query_envelope);
 
-    request(service_url, function (error, response, body) {      
-        cb(body);
+    request(service_url, function (error, response, body) {
+        var jres = JSON.parse(body);
+        console.dir(jres);
+        cb(jres);
     });
 };
 
 exports.ApiManager = ApiManager;
-
-
 
 
         // <option value="places">Places</option>

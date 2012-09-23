@@ -34,6 +34,11 @@
 </head>
 
     <div id="header">
+        <a href="/stream/me">
+            <div id="imgUser-dummy">
+                &nbsp;
+            </div>
+        </a>
         <div id="imgUser">
             <% if (user) { %>
             <img src="<%=user.thumbUrl%>" />
@@ -44,9 +49,12 @@
         <div id="header-bg">
 
             <div id="btn-panel" align="center">
-                <div class="btn" id="btn-show-favs"><img src="/images/heart.png" /></div>
-                <div class="btn" id="btn-show-friends"><img src="/images/friends.png" /></div>
-
+                <div class="btn" id="btn-show-favs">
+                    <a href="/stream/favorites"><img src="/images/heart.png" /></a>
+                </div>
+                <div class="btn" id="btn-show-friends">
+                    <a href="/stream/friends"><img src="/images/friends.png" /></a>
+                </div>
             </div>
         </div>
 

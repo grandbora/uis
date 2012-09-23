@@ -45,7 +45,11 @@ StreamManager.prototype.getPhoto = function(photoId, accessToken, cb) {
     var self = this;
     this.oa.get(process.env.EYEEM_BASESITE + '/api/v2/photos/'+photoId, accessToken, function(error, result) {
         var result = JSON.parse(result);
-        self.augmentPhoto(result.photo, cb);
+        self.augmentPhoto(result.photo, function(photo) {
+            var eyeemTags = photo.albums.items;
+            photo.eyeemTags = eyeemTags;
+            cb(photo);
+        });
     });
 };
 /**
@@ -69,10 +73,10 @@ StreamManager.prototype.augmentStream = function(photos, cb){
             var photo = und.find(photos, function(ph) {
                 return (ph.id == tag.resId)
             });
-            if (!photo.tags)
-                photo.tags = [];
+            if (!photo.uisTags)
+                photo.uisTags = [];
 
-            photo.tags.push(tag);
+            photo.uisTags.push(tag);
         });
         cb(photos);
     });
@@ -83,7 +87,7 @@ StreamManager.prototype.augmentPhoto = function(photo, cb) {
     var pId = photo.id + "";
     var pIds = [pId];
     this.tagManager.getTags(pIds, function(tags) {
-       photo.tags = tags;
+       photo.uisTags = tags;
         cb(photo);
     });
 }

@@ -18,7 +18,7 @@ var StreamHandler = function() {
 
 StreamHandler.prototype.index = function(req, res){
   if (req.cookies['eyem_cookie'])
-     res.redirect("/stream");
+     res.redirect("/stream/me");
 
   res.render('index', {
       layout:true
@@ -95,9 +95,30 @@ TagHandler.prototype.addTag = function(req, res) {
 };
 
 TagHandler.prototype.fetchTagData = function(req, res) {
-    var tagData = this.apiManager.fetchTagData({tagName:'nirvana', categoryName:null},{"latitude": 41.9135,"longitude": -87.622},function(result) {
+
+    var qtype = req.param('qtype');
+    var tagName = req.param('name');
+    var tagType = req.param('type');
+    var subType = req.param('subtype'); //city, venue, country
+
+
+    if (tagType == 'location') {
+        var latitude = req.param('latitude');
+        var longitude = req.param('longitude');
+
+        if (!latitude) {
+            res.send(404, {"notice":"no boundaries available"});
+        } else {
+            var mapUrl = this.apiManager.getMapData(latitude, longitude);
+            res.json(200,{type:'map', mapUrl:mapUrl});
+        }
+
+    } else {
+        res.send(404, {"notice":"no information available"});
+    }
+    /*var tagData = this.apiManager.fetchTagData({tagName:'nirvana', categoryName:null},{"latitude": 41.9135,"longitude": -87.622},function(result) {
       res.send(result);
-    });
+    });*/
 };
 
 exports.login = function(req, res){
