@@ -6,9 +6,12 @@
     <title></title>
     <meta name="description" content="">
     <meta name="HandheldFriendly" content="True">
-    <meta name="MobileOptimized" content="320">
-    <meta name="viewport" content="width=device-width">
+    <meta name="MobileOptimized" content="640">
+
     <meta http-equiv="cleartype" content="on">
+
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
 
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/touch/apple-touch-icon-144x144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/img/touch/apple-touch-icon-114x114-precomposed.png">
@@ -17,10 +20,10 @@
     <link rel="shortcut icon" href="/img/touch/apple-touch-icon.png">
 
     <!-- For iOS web apps. Delete if not needed. https://github.com/h5bp/mobile-boilerplate/issues/94 -->
-    <!--
+
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    -->
+
 
     <!-- This script prevents links from opening in Mobile Safari. https://gist.github.com/1042026 -->
     <!--
@@ -40,12 +43,22 @@
                 &nbsp;
             </div>
         </a>
+
+        <a href="/logout">
+            <div id="logout-dummy">
+                &nbsp;
+            </div>
+        </a>
+
         <div id="imgUser">
             <% if (typeof user !== "undefined") { %>
             <img src="<%=user.thumbUrl%>" />
             <% } else { %>
             <h1>?</h1>
             <% } %>
+        </div>
+        <div id="imgLogo">
+            <img src="/images/logo_big.png" />
         </div>
         <div id="header-bg">
 

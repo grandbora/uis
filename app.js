@@ -34,12 +34,13 @@ var streamHandler = new routes.StreamHandler();
 var tagHandler = new routes.TagHandler();
 
 app.get('/', streamHandler.index.bind(streamHandler));
+
 app.get('/stream/:streamType', streamHandler.stream.bind(streamHandler));
 app.get('/photo/:photoId', streamHandler.photo.bind(streamHandler));
 
 app.get('/login', routes.login);
 app.get('/login_callback', routes.loginCallback);
-
+app.get('/logout', routes.logout);
 
 app.post('/tag', tagHandler.addTag.bind(tagHandler));
 app.get('/tag', tagHandler.fetchTagData.bind(tagHandler));

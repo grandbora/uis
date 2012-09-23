@@ -1,28 +1,53 @@
 <div id="single-photo">
 
-    <img src="<%=photo.photoUrl%>">
+    <div id="pnl-photo">
+        <img src="<%=photo.photoUrl%>"
+             data-id="<%=photo.id%>"
+             data-restype="ee-photo"
+             id="the-image"/>
 
+
+        <div id="box-source-actions">
+            <button class="close">close</button>
+            <div class="btn wikipedia" data-qtype="wikipedia"></div>
+            <div class="btn news" data-qtype="news" ></div>
+            <div class="btn events" data-qtype="events" ></div>
+            <div class="btn info" data-qtype="info" ></div>
+            <div class="btn organization" data-qtype="organization" ></div>
+            <div class="btn map" data-qtype="map" ></div>
+        </div>
+
+        <div id="box-search-results">
+            <div id="map-placeholder">
+                <img src="" class="map"/>
+                <div id="map-container"></div>
+            </div>
+        </div>
+        <% if (photo.uisTags) {
+            for (i=0;i< photo.uisTags.length;i++) {
+                var uisTag = photo.uisTags[i];
+                %>
+                <div class="tag-pin" data-tagname="<%=uisTag.tagname%>" style="left:<%=uisTag.x%>px;top:<%=uisTag.y%>px;"></div>
+                <%
+                }
+            }
+        %>
+    </div>
+
+    <div id="tagList">
     <% if (photo.eyeemTags) {
         for(i=0;i<photo.eyeemTags.length;i++) {
             var eyeemTag =  photo.eyeemTags[i];
+            var locationCls = '';
             if ( (eyeemTag.type == 'city') ||(eyeemTag.type == 'country')||(eyeemTag.type == 'venue') ) {
+                locationCls = 'location';
+            }
     %>
-    <div id="box-source-actions">
-        <button data-qtype="wikipedia">Wikipedia </button>
-        <button data-qtype="news">News</button>
-        <button data-qtype="events">Events</button>
-        <button data-qtype="buy">Buy</button>
-        <button data-qtype="info">Info</button>
-        <button data-qtype="organization">Places</button>
-        <button data-qtype="map">Map</button>
-        <div id="map-placeholder">
-            <img src="" class="map"/>
-            <div id="map-container"></div>
-        </div>
-    </div>
 
-        <button class="btn-tagAction location"
-                data-type="location"
+        <button class="btn-tagAction <%=locationCls%>"
+                data-tagtype="eyeem"
+                data-type="<%=locationCls%>"
+
                 data-subtype="<%=eyeemTag.type%>"
                 data-name="<%=eyeemTag.name%>"
         <% if (eyeemTag.location) { %>
@@ -30,11 +55,24 @@
                 data-gps-lon="<%=eyeemTag.location.longitude%>"
         <% } %> ><%=eyeemTag.name%></button>
     <%
-            }
         }
-
     }
     %>
+    <% if (photo.uisTags) {
+        for (i=0;i< photo.uisTags.length;i++) {
+            var uisTag = photo.uisTags[i];
+            %>
+        <button class="btn-tagAction uisTag"
+                data-tagtype="uis"
+                data-name="<%=uisTag.tagname%>"
+                data-subtype="<%=uisTag.category %>"
+                data-type=""
+                ><%=uisTag.tagname%></button>
+        <%
+        }
+    }
+    %>
+    </div>
 
 
 </div>
@@ -49,7 +87,6 @@
         <option value="geographic">Geographic (i.e. Land, City)</option>
         <option value="celebrities_society">Celebrities & Society</option>
         <option value="sports">Sports</option>
-        <option value="multimedia">Multimedia</option>
         <option value="science_education">Science & Education</option>
         <option value="sports">Sports</option>
         <option value="multimedia">Multimedia</option>
@@ -64,10 +101,15 @@
     </select>
     <br />
     <button>Tag!</button>
+
 </div>
 
         <script type="text/javascript">
             $(function() {
+               $('#box-source-actions .close').on('click', function() {
+                   $('#box-source-actions').fadeOut();
+               });
+
                $('.btn-tagAction').on('click', function() {
                    $('#map-placeholder img').attr('src','');
                    var query = {
@@ -78,15 +120,19 @@
                        longitude: $(this).data('gps-lon')
                    };
                    console.dir(query);
-                   $('#box-source-actions button').off();
-                   $('#box-source-actions button').on("click", function() {
+                   $('#box-source-actions .btn').off();
+                   $('#box-source-actions .btn').on("click", function() {
                         query.qtype = $(this).data('qtype');
                         $.get("/tag", query, function(res, err) {
                             if (res) {
+                                $('#box-source-actions').fadeOut();
+                                $('#box-search-results').fadeIn();
+
                                 if (res.type == 'map') {
-                                    $('#map-placeholder img').show();
-                                    $('#map-placeholder #map-container').hide();
-                                    $('#map-placeholder img').attr('src', res.mapUrl);
+
+                                    $('#box-search-results #map-placeholder img').show();
+                                    $('#box-search-results #map-placeholder #map-container').hide();
+                                    $('#box-search-results #map-placeholder img').attr('src', res.mapUrl);
                                 }
                                 if (res.type == 'organization') {
                                     nokia.Settings.set("appId", "irbEtA17e7khRQcuDjQB"); 
@@ -134,9 +180,43 @@
                             }
                         });
                    });
-
+                   $('#box-search-results').hide();
                    $('#box-source-actions').show();
-               })
+               });
+
+                $('.tag-pin').hover(function() {
+                    $(this).text($(this).data('tagname'));
+                    $(this).fadeTo('fast',0.9);
+                }, function() {
+                    $(this).text("");
+                    $(this).fadeTo('fast',0.1);
+                })
+
+               $('#the-image').on('click', function(evt) {
+                    var eeid = ($(this).data('id'));
+                    var resType = ($(this).data('restype'));
+
+                   var uisTag = {resType: resType,resId: eeid, x: evt.offsetX, y:evt.offsetY};
+
+                     var $tagbox =$('#box-create-tag');
+                     $tagbox.fadeIn();
+                     var offset = $(this).offset();
+                     $tagbox.offset({ top: offset.top + uisTag.y, left: offset.left + uisTag.x});
+
+                     $tagbox.find('button').off();
+                     $tagbox.find('button').on('click', function() {
+                         uisTag.tagname = $tagbox.find("input[name=tag]").val();
+                         uisTag.category = $tagbox.find("select[name=category]").val();
+
+                         $.post('/tag', uisTag, function(resp){
+                             var taginf = '<div class="tag">'+uisTag.tagname+'('+uisTag.category+')</div>';
+                             var $taginf = $(taginf);
+                             $('#tagList').append($taginf);
+                             $tagbox.fadeOut();
+                         });
+                 });
+
+                 })
             });
 
 

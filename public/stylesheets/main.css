@@ -22,6 +22,8 @@ body {
     font-size: 1em;
     line-height: 1.4;
     background-image:url("/images/bg.png");
+    height: 100%;
+    min-height: 100%;
 }
 
 a {
@@ -101,15 +103,25 @@ a {
     position:relative;
 }
 
-#header #imgUser {
+#header #imgUser,#header #imgLogo{
+    position:absolute;
+}
+#header #imgUser img, #header #imgLogo img {
     width:70px;
     height:70px;
-    background:red;
-    position:absolute;
+}
+#header #imgUser{
     top:10px;
     right:10px;
     z-index:5;
 }
+
+#header #imgLogo{
+    top:0px;
+    left:5px;
+    z-index:5;
+}
+
 #header #imgUser-dummy {
     width:70px;
     height:70px;
@@ -119,10 +131,16 @@ a {
     z-index:50;
 }
 
-#header #imgUser img {
+#header #logout-dummy {
     width:70px;
     height:70px;
+    position:absolute;
+    top:10px;
+    left:10px;
+    z-index:50;
 }
+
+
 
 
 #body {
@@ -175,23 +193,65 @@ ul#stream li img.sm-image {
 
 }
 
+#single-photo #the-image {
+    display:block;
+    min-width:640px;
+}
+#single-photo #tagList {
+    margin-top:30px;
+    margin-bottom:10px;
+}
+
+#single-photo #pnl-photo {
+    position:relative;
+}
+
+#single-photo #pnl-photo .tag-pin {
+    position:absolute;
+    min-width:20px;
+    min-height:20px;
+    background-color:#C5B4C8;
+    opacity: 0.2;
+    color:white;
+    border:2px solid #FFF;
+}
+#box-search-results,
 #box-source-actions {
     position:absolute;
     width:620px;
-    height:400px;
-    background:#a9a9a9;
-    bottom:40px;
+    height:360px;
+    background:#C5B4C8;
+    bottom:0px;
     left:10px;
     display:none;
-    opacity: 0.9;
 }
 
-#box-source-actions button {
-    padding:10px;
+#box-source-actions .btn {
+    width:167px;
+    height:123px;
+    float:left;
+    margin:5px;
 }
 
-#box-source-actions #map-placeholder {
+
+#box-source-actions .btn.wikipedia {background-image: url('/images/wiki_button.png');}
+#box-source-actions .btn.news {background-image: url('/images/news_button.png');}
+#box-source-actions .btn.events {background-image: url('/images/events_button.png');}
+#box-source-actions .btn.buy {background-image: url('/images/buy_button.png');}
+#box-source-actions .btn.info {background-image: url('/images/info_button.png');}
+#box-source-actions .btn.organization {background-image: url('/images/organization_button.png');}
+#box-source-actions .btn.map {background-image: url('/images/maps_button.png');}
+
+
+
+#box-source-actions button.close {
+    position:absolute;
+    top:4px; right:4px;
 }
+#box-search-results #map-placeholder {
+    margin:10px;
+}
+
 #box-create-tag {
     position:absolute;
     background-color:white;

@@ -143,6 +143,11 @@ exports.login = function(req, res){
   res.redirect(authorizeUrl);
 };
 
+exports.logout = function(req, res) {
+    res.cookie('eyem_cookie', '');
+    res.redirect('/');
+};
+
 exports.loginCallback = function(req, res){
 
     oa.getOAuthAccessToken(req.query['code'],{
@@ -151,7 +156,7 @@ exports.loginCallback = function(req, res){
     },function(error, access_token, refresh_token, results){
         console.dir(access_token);
       res.cookie('eyem_cookie', access_token);
-      res.redirect('/stream');
+      res.redirect('/stream/me');
     });
 };
 
